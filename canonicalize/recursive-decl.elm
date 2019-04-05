@@ -4,7 +4,7 @@ import Json.Decode as D
 
 type Tree
     = Node Question
-    | Leaf RecommendationData
+    | Leaf Recommendation
 
 
 type alias Question =
@@ -17,9 +17,8 @@ type alias Choice =
     , result : Tree
     }
 
-type alias RecommendationData =
+type alias Recommendation =
     { title : String
-    , availableOn : List Source
     }
 
 type alias Source =
@@ -36,26 +35,16 @@ questionDecoder =
         (D.field "choices" (D.list choiceDecoder))
 
 
-sourceDecoder : D.Decoder Source
-sourceDecoder =
-    D.map2 Source
-        (D.field "name" D.string)
-        (D.field "url" D.string)
-
-
-recommendationDecoder : D.Decoder RecommendationData
-recommendationDecoder =
-    D.map2 RecommendationData
-        (D.field "title" D.string)
-        (D.field "available_on" (D.list sourceDecoder))
-
-
 choiceDecoder : D.Decoder Choice
 choiceDecoder =
     D.map2 Choice
         (D.field "text" D.string)
         (D.field "result" treeDecoder)
 
+recommendationDecoder : D.Decoder Recommendation
+recommendationDecoder =
+    D.map Recommendation
+        (D.field "title" D.string)
 
 treeDecoder : D.Decoder Tree
 treeDecoder =
