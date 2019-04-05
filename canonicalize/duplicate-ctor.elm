@@ -1,0 +1,3 @@
+type Custom
+    = Foo
+    | Foo
